@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Investment Decision Dashboard – KemetX</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Cairo","Segoe UI",system-ui,Arial,sans-serif;
+  transition:background .3s,color .3s;
+  line-height:1.6;
+}
+
+:root{
+  --bg:#0f172a;
+  --card:#111827;
+  --muted:#94a3b8;
+  --text:#e5e7eb;
+  --accent:#22c55e;
+  --warn:#f59e0b;
+  --danger:#ef4444;
+  --primary:#38bdf8;
+  --chip:#1f2937;
+  --border:#1f2937;
+}
+:root.light {
+  --bg:#f9fafb;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --text:#111827;
+  --accent:#16a34a;
+  --warn:#d97706;
+  --danger:#dc2626;
+  --primary:#0284c7;
+  --chip:#f3f4f6;
+  --border:#d1d5db;
+}
+
+/* ===== Header ===== */
+header {
+  background: var(--card);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.logo { font-size: 20px; margin: 0; font-weight:700; color:var(--primary); }
+.desktop-nav { display: flex; gap: 20px; }
+.desktop-nav a {
+  text-decoration: none; color: var(--text);
+  font-weight: 500; font-size:14px;
+  transition: color .2s;
+}
+.desktop-nav a:hover { color: var(--primary); }
+
+.side-menu {
+  position: fixed; top: 0; right: -260px;
+  width: 250px; height: 100vh;
+  background: var(--card); color:var(--text);
+  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+  display: flex; flex-direction: column; padding: 20px;
+  transition: right 0.3s ease; z-index: 999;
+}
+.side-menu.open { right: 0; }
+.side-menu nav { display: flex; flex-direction: column; gap: 15px; }
+.side-menu a {
+  color: var(--text); text-decoration: none; font-size: 16px; font-weight: 500;
+}
+.side-menu a:hover{ color:var(--primary); }
+
+.menu-btn, .close-btn {
+  font-size: 24px; background: none; border: none; cursor: pointer; color:var(--text);
+}
+.close-btn { align-self: flex-end; margin-bottom: 20px; }
+
+@media(min-width: 768px) { .menu-btn, .side-menu { display: none; } }
+@media(max-width:768px){ .desktop-nav{display:none} .menu-btn{display:block} .actions{display:none} }
+
+/* ===== General ===== */
+.theme-toggle{
+  cursor:pointer;border:0;background:var(--chip);color:var(--text);
+  padding:8px 12px;border-radius:8px;transition:background .2s;
+}
+.theme-toggle:hover{background:var(--primary);color:#fff}
+.container{max-width:1100px;margin:auto;padding:18px}
+h1,h2{font-weight:800}
+h1{font-size:clamp(20px,3vw,28px)}
+h2{font-size:18px}
+.sub{color:var(--muted);font-size:14px}
+.grid{display:grid;gap:14px}
+.grid-2{grid-template-columns:1.2fr .8fr}
+@media(max-width:920px){.grid-2{grid-template-columns:1fr}}
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:18px;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+  transition:background .3s,color .3s,transform .2s;
+}
+.card:hover{ transform:translateY(-2px); }
+
+/* ===== Forms ===== */
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+input[type="text"],input[type="number"]{
+  width:100%;padding:12px 14px;font-size:15px;
+  border:1px solid var(--border);border-radius:12px;
+  background:var(--bg);color:var(--text);outline:none;
+  transition:border .2s,background .2s;
+}
+input[type="text"]:focus,input[type="number"]:focus{border-color:var(--primary);background:var(--chip)}
+input::placeholder{color:#6b7280}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ===== Buttons ===== */
+.btn{
+  cursor:pointer;border:0;border-radius:12px;
+  padding:12px 16px;font-weight:700;font-size:14px;
+  transition:all .2s;
+}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover:not(:disabled){background:#0369a1}
+.btn-ghost{background:var(--chip);color:var(--text)}
+.btn-ghost:hover:not(:disabled){background:var(--primary);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover:not(:disabled){background:#b91c1c}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ===== Chips ===== */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{
+  background:var(--chip);border:1px solid var(--border);
+  padding:6px 10px;border-radius:999px;font-size:12px;color:var(--muted)
+}
+
+/* ===== Table ===== */
+.table-responsive{overflow-x:auto;width:100%}
+table{width:100%;border-collapse:separate;border-spacing:0 8px}
+thead th{
+  font-size:12px;color:var(--muted);font-weight:600;text-align:right;padding:6px;
+}
+tbody td{
+  background:var(--bg);border:1px solid var(--border);
+  padding:12px;vertical-align:middle;
+  transition:background .3s,color .3s;
+}
+tbody tr td:first-child{border-radius:12px 0 0 12px}
+tbody tr td:last-child{border-radius:0 12px 12px 0}
+tbody tr:hover td{background:var(--chip)}
+
+@media(max-width:768px){
+  table{font-size:14px}
+  thead th{font-size:11px;padding:8px 6px}
+  tbody td{padding:10px 6px;font-size:13px}
+  .btn{font-size:12px;padding:8px 12px}
+}
+@media(max-width:480px){
+  table{font-size:12px}
+  thead th{font-size:10px;padding:6px 4px}
+  tbody td{padding:8px 4px;font-size:11px}
+  .btn{font-size:11px;padding:6px 10px}
+}
+
+/* ===== Badges & Risk ===== */
+.badge{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;display:inline-block}
+.buy{background:rgba(34,197,94,.15);color:#16a34a;border:1px solid rgba(34,197,94,.35)}
+.hold{background:rgba(245,158,11,.15);color:#d97706;border:1px solid rgba(245,158,11,.35)}
+.avoid{background:rgba(239,68,68,.15);color:#dc2626;border:1px solid rgba(239,68,68,.35)}
+
+.risk-low{color:#16a34a}
+.risk-med{color:#d97706}
+.risk-high{color:#dc2626}
+
+/* ===== Footer ===== */
+.footer{
+  color:var(--muted);font-size:12px;margin-top:20px;
+  text-align:center;padding:16px;
+  border-top:1px solid var(--border);
+}
+
+.empty-state{text-align:center;color:var(--muted);padding:40px 20px}
+  </style>
+</head>
+<body>
+  <!-- ===== Header ===== -->
+  <header>
+  <div class="container nav">
+    <h1 class="logo"></h1>
+
+    <!-- Desktop links -->
+    <nav class="desktop-nav">
+      <a href="#">Home</a>
+      <a href="#">About Us</a>
+      <a href="#">Contact</a>
+      <a href="#">My Profile</a>
+    </nav>
+
+    <!-- Menu button (mobile) -->
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+
+    <!-- Side menu -->
+    <aside class="side-menu" id="sideMenu" aria-hidden="true">
+      <button class="close-btn" id="closeMenu" aria-label="Close menu">×</button>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+        <a href="#">My Profile</a>
+      </nav>
+      
+      <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
+    </aside>
+  </div>
+  </header>
+
+  <main class="container cards-container" style="margin-top:14px">
+    <!-- Form Card -->
+    <section class="card">
+      <h2 style="margin:0 0 10px 0">Add Asset</h2>
+      <div class="chips" style="margin-bottom:12px">
+        <span class="chip">Example: FWRY, EFG, MSFT</span>
+        <span class="chip">Currency irrelevant – numbers only</span>
+      </div>
+      <form id="assetForm">
+        <div class="row">
+          <div>
+            <label for="name">Asset Name</label>
+            <input type="text" id="name" placeholder="MSFT" required style="padding: 14px; font-size: 16px;">
+          </div>
+          <div>
+            <label for="pnow">Current Price</label>
+            <input type="number" id="pnow" placeholder="450" required style="padding: 14px; font-size: 16px;">
+          </div>
+          <div>
+            <label for="p6m">6 Months</label>
+            <input type="number" id="p6m" placeholder="440" style="padding: 14px; font-size: 16px;">
+          </div>
+          <div>
+            <label for="p1y">1 Year</label>
+            <input type="number" id="p1y" placeholder="410" style="padding: 14px; font-size: 16px;">
+          </div>
+          <div>
+            <label for="p5y">5 Years</label>
+            <input type="number" id="p5y" placeholder="135" style="padding: 14px; font-size: 16px;">
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <label for="notes">Notes</label>
+          <input type="text" id="notes" placeholder="Major Tech, S&P 500 Fund">
+        </div>
+        <div class="actions" style="margin-top:12px">
+          <button class="btn btn-primary" type="submit">Add</button>
+          <button class="btn btn-ghost" type="button" id="clearBtn">Clear All</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Insights Card -->
+    <section class="card">
+      <h2 style="margin:0 0 10px 0">Decision Methodology</h2>
+      <div class="chips">
+        <span class="chip">5-Year CAGR</span>
+        <span class="chip">1-Year Return</span>
+        <span class="chip">6-Month Return</span>
+        <span class="chip">Risk = Volatility</span>
+      </div>
+      <div class="sep"></div>
+      <ul style="margin:0;padding-right:18px;line-height:1.9">
+        <li>CAGR = <code>(Today Price / 5-Year Price)^(1/5) − 1</code></li>
+        <li>1-Year Return + 6-Month Return</li>
+        <li>Momentum Score = 20% of CAGR + 30% of 1-Year + 50% of 6-Month</li>
+        <li>Risk = Standard Deviation of Returns</li>
+        <li>Decision:
+          <ul style="margin-top:6px;line-height:1.7">
+            <li><span class="badge buy">Buy</span> if momentum ≥ 10% and all returns positive</li>
+            <li><span class="badge hold">Hold</span> if between 0–10%</li>
+            <li><span class="badge avoid">Avoid</span> if momentum is negative</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="sep"></div>
+      <div style="color:var(--muted)">⚠️ Note: Educational tool only. Not investment advice. Use research and portfolio diversification.</div>
+    </section>
+
+   <!-- Table Card -->
+<section class="card" style="grid-column:1/-1">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px">
+    <h2 style="margin:0">Assets List</h2>
+    <div class="actions">
+      <button class="btn btn-ghost" id="exportBtn">Export JSON</button>
+      <button class="btn btn-ghost" id="importBtn">Import JSON</button>
+      <button class="btn btn-danger" id="wipeBtn">Wipe All</button>
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>6 Months</th>
+        <th>1 Year</th>
+        <th>5 Years (CAGR)</th>
+        <th>Momentum</th>
+        <th>Risk</th>
+        <th>Decision</th>
+        <th>Notes</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="footer">Tip: Double-click a row to start quick edit.</div>
+</section>
+
+  </main>
+
+  <template id="row-template">
+    <tr>
+      <td class="nm"></td><td class="r6"></td><td class="r1"></td>
+      <td class="r5"></td><td class="mom"></td><td class="risk"></td>
+      <td class="rec"></td><td class="nt"></td><td class="ops"></td>
+    </tr>
+  </template>
+    </section>
+  </main>
+
+  <footer class="footer">
+    © 2025 KemetX. All rights reserved
+  </footer>
+
+  <script>
+ // ================== State ==================
+const STORAGE_KEY = 'kemetx_state';
+let state = [];
+let editingId = null;
+
+function safeUUID() {
+  return 'xxxx-xxxx-xxxx'.replace(/[x]/g,()=>Math.floor(Math.random()*16).toString(16));
+}
+
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function loadState() { 
+  const stored = localStorage.getItem(STORAGE_KEY); 
+  if(stored) state = JSON.parse(stored); 
+}
+
+// ================== Render ==================
+function render() {
+  const tbody = document.getElementById('rows');
+  tbody.innerHTML = '';
+  if(state.length === 0){
+    tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No assets yet</td></tr>';
+    return;
+  }
+
+  state.forEach(a => {
+    const tr = document.createElement('tr');
+
+    // Calculate metrics
+    let metrics = { r6m:null,r1y:null,cagr5:null,momentum:null,risk:null,riskLevel:'-',decision:'-' };
+    if(a.p5y && a.p1y && a.p6m && a.pnow){
+      metrics = calcMetrics(a.p5y,a.p1y,a.p6m,a.pnow);
+    }
+
+    tr.innerHTML = `
+      <td class="nm">${a.name}</td>
+      <td class="r6">${metrics.r6m ? (metrics.r6m*100).toFixed(1)+'%' : '-'}</td>
+      <td class="r1">${metrics.r1y ? (metrics.r1y*100).toFixed(1)+'%' : '-'}</td>
+      <td class="r5">${metrics.cagr5 ? (metrics.cagr5*100).toFixed(1)+'%' : '-'}</td>
+      <td class="mom">${metrics.momentum ? (metrics.momentum*100).toFixed(1)+'%' : '-'}</td>
+      <td class="risk ${riskColor(metrics.riskLevel)}">${metrics.riskLevel}</td>
+      <td class="rec">${badgeDecision(metrics.decision)}</td>
+      <td class="nt">${a.notes || '-'}</td>
+      <td class="ops"></td>
+    `;
+
+    // Action buttons
+    const ops = tr.querySelector('.ops');
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn btn-ghost'; editBtn.textContent = 'Edit';
+    editBtn.onclick = () => editAsset(a.id);
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn btn-danger'; delBtn.textContent = 'Delete';
+    delBtn.onclick = () => { if(confirm('Are you sure you want to delete this asset?')) removeAsset(a.id); };
+
+    ops.append(editBtn, delBtn);
+
+    // Quick edit on double click
+    tr.ondblclick = () => editAsset(a.id);
+
+    tbody.appendChild(tr);
+  });
+}
+
+// ================== CRUD ==================
+function editAsset(id) {
+  const asset = state.find(a => a.id === id);
+  if(!asset) return;
+
+  document.getElementById('name').value = asset.name;
+  document.getElementById('pnow').value = asset.pnow;
+  document.getElementById('p6m').value = asset.p6m || '';
+  document.getElementById('p1y').value = asset.p1y || '';
+  document.getElementById('p5y').value = asset.p5y || '';
+  document.getElementById('notes').value = asset.notes || '';
+
+  editingId = id;
+}
+
+function removeAsset(id){ 
+  state = state.filter(a=>a.id!==id); 
+  save(); render(); 
+}
+
+// ================== Metrics ==================
+function calcMetrics(p5y, p1y, p6m, pnow){
+  const r6m = (pnow / p6m) - 1;
+  const r1y = (pnow / p1y) - 1;
+  const cagr5 = Math.pow(pnow / p5y, 1/5) - 1;
+  const momentum = 0.2*cagr5 + 0.3*r1y + 0.5*r6m;
+  const arr = [r6m, r1y, cagr5];
+  const mean = arr.reduce((a,b)=>a+b,0)/3;
+  const variance = arr.reduce((s,v)=>s+Math.pow(v-mean,2),0)/3;
+  const risk = Math.sqrt(variance);
+  let decision = 'hold';
+  if(momentum >= 0.10 && r6m>0 && r1y>0 && cagr5>0) decision = 'buy';
+  else if(momentum < 0) decision = 'avoid';
+  let riskLevel = 'Low';
+  if(risk >= 0.25) riskLevel = 'High';
+  else if(risk >= 0.12) riskLevel = 'Medium';
+  return { r6m, r1y, cagr5, momentum, risk, riskLevel, decision };
+}
+
+function badgeDecision(dec){
+  if(dec==='buy') return `<span class="badge buy">Buy</span>`;
+  if(dec==='avoid') return `<span class="badge avoid">Avoid</span>`;
+  return `<span class="badge hold">Hold</span>`;
+}
+function riskColor(level){
+  if(level==='High') return 'risk-high';
+  if(level==='Medium') return 'risk-med';
+  return 'risk-low';
+}
+
+// ================== Init ==================
+function init(){
+  loadState();
+  if(state.length===0){
+    const demo=[
+      {name:'MSFT',p5y:135,p1y:410,p6m:440,pnow:450,notes:'Major Tech - Microsoft'},
+      {name:'SPY',p5y:290,p1y:500,p6m:520,pnow:530,notes:'S&P 500 Fund'},
+      {name:'FWRY',p5y:15,p1y:6,p6m:7.5,pnow:7.2,notes:'Fintech Egypt'}
+    ];
+    demo.forEach(d=>{ state.push({...d,id:safeUUID(),ts:Date.now()}); });
+    save();
+  }
+  render();
+}
+
+// ================== Form ==================
+document.getElementById('assetForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const name = document.getElementById('name');
+  const pnow = document.getElementById('pnow');
+  const p6m = document.getElementById('p6m');
+  const p1y = document.getElementById('p1y');
+  const p5y = document.getElementById('p5y');
+  const notes = document.getElementById('notes');
+
+  if(editingId) {
+    const asset = state.find(a => a.id === editingId);
+    if(asset){
+      asset.name = name.value;
+      asset.pnow = +pnow.value;
+      asset.p6m = +p6m.value || null;
+      asset.p1y = +p1y.value || null;
+      asset.p5y = +p5y.value || null;
+      asset.notes = notes.value || '';
+    }
+    editingId = null;
+  } else {
+    const a = {
+      id: safeUUID(),
+      name: name.value,
+      pnow: +pnow.value,
+      p6m: +p6m.value || null,
+      p1y: +p1y.value || null,
+      p5y: +p5y.value || null,
+      notes: notes.value || '',
+      ts: Date.now()
+    };
+    state.push(a);
+  }
+
+  save();
+  render();
+  this.reset();
+});
+
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  document.getElementById('assetForm').reset();
+  editingId = null;
+});
+
+document.getElementById('wipeBtn').addEventListener('click', ()=>{
+  if(confirm('Are you sure you want to clear all assets?')){
+    state = [];
+    save();
+    render();
+  }
+});
+
+    // Theme toggle
+    const themeToggle=document.getElementById('themeToggle');
+    themeToggle.addEventListener('click',()=>{ document.documentElement.classList.toggle('light'); });
+
+    // Side menu
+    const menuBtn=document.getElementById('menuBtn'),closeMenu=document.getElementById('closeMenu'),sideMenu=document.getElementById('sideMenu');
+    menuBtn.addEventListener('click',()=>sideMenu.classList.add('open'));
+    closeMenu.addEventListener('click',()=>sideMenu.classList.remove('open'));
+
+    init();
+  </script>
+</body>
+</html>
