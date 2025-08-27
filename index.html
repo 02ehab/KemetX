@@ -181,7 +181,47 @@ tbody tr:hover td{background:var(--chip)}
 }
 
 .empty-state{text-align:center;color:var(--muted);padding:40px 20px}
-  </style>
+
+/* ===== Mobile Responsive Enhancements ===== */
+@media(max-width:768px){
+  /* Stack rows */
+  .row { grid-template-columns: 1fr; }
+
+  /* Make container padding smaller */
+  .container { padding: 12px; }
+
+  /* Adjust headings */
+  h1 { font-size: 20px; }
+  h2 { font-size: 16px; }
+
+  /* Cards full width */
+  .card { padding: 14px; border-radius: 14px; }
+
+  /* Actions full width buttons */
+  .actions { flex-direction: column; align-items: stretch; }
+  .actions .btn { width: 100%; }
+
+  /* Side menu easier tap area */
+  .side-menu { width: 80%; max-width: 260px; }
+
+  /* Nav links spacing */
+  .side-menu nav a { padding: 10px 0; font-size: 15px; }
+}
+
+@media(max-width:480px){
+  /* Smaller padding for ultra small phones */
+  .container { padding: 10px; }
+  h1 { font-size: 18px; }
+  h2 { font-size: 15px; }
+
+  /* Reduce button size */
+  .btn { font-size: 12px; padding: 8px 10px; }
+
+  /* Cards tighter */
+  .card { padding: 12px; border-radius: 12px; }
+}
+</style>
+
 </head>
 <body>
   <!-- ===== Header ===== -->
@@ -322,9 +362,7 @@ tbody tr:hover td{background:var(--chip)}
       <td class="rec"></td><td class="nt"></td><td class="ops"></td>
     </tr>
   </template>
-    </section>
-  </main>
-
+   
   <footer class="footer">
     © 2025 KemetX. All rights reserved
   </footer>
