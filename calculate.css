@@ -1,0 +1,212 @@
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --primary: #007bff;
+  --dark: #0f172a;
+  --light: #f9fafb;
+  --gray: #6b7280;
+}
+
+/* ===== Base ===== */
+body {
+  background: var(--light);
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ===== Header ===== */
+header {
+  background: var(--dark);
+  padding: 1rem 0;
+  color: white;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.desktop-nav a {
+  color: white;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.desktop-nav a:hover {
+  color: var(--primary);
+}
+
+.desktop-nav .btn {
+  background: var(--primary);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  color: white;
+}
+
+/* ===== Mobile menu ===== */
+/* Mobile menu button */
+.mobile-menu-btn {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: white;
+}
+
+/* Mobile nav menu */
+.mobile-nav {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 70%;
+  height: 100%;
+  background: var(--dark);
+  flex-direction: column;
+  padding-top: 3rem;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.mobile-nav a {
+  color: white;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.mobile-nav a.btn {
+  background: var(--primary);
+  text-align: center;
+  margin: 1rem 2rem;
+  border-radius: 5px;
+}
+
+/* Close button */
+.mobile-nav a.close-menu {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+/* Show mobile button on small screens */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+  .mobile-menu-btn {
+    display: block;
+  }
+}
+
+/* When menu is open */
+.mobile-nav.open {
+  left: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ===== Hero ===== */
+.hero {
+  background: linear-gradient(135deg, var(--primary), #00c6ff);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.hero h2 span {
+  color: yellow;
+}
+
+.hero-buttons {
+  margin-top: 1.5rem;
+}
+
+.btn, .btn-outline {
+  display: inline-block;
+  margin: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.btn {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-outline {
+  border: 2px solid white;
+  color: white;
+  background: transparent;
+}
+
+/* ===== Features ===== */
+.features {
+  padding: 3rem 0;
+  background: white;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature {
+  background: var(--light);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* ===== Disclaimer ===== */
+.disclaimer {
+  background: #fde68a;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* ===== Call to Action ===== */
+.cta {
+  text-align: center;
+  padding: 3rem 0;
+  background: var(--dark);
+  color: white;
+}
+
+/* ===== Footer ===== */
+footer {
+  background: #1f2937;
+  color: #9ca3af;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.85rem;
+}
