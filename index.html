@@ -16,68 +16,127 @@ body{
 }
 
 :root{
-  --bg:#0f172a;
-  --card:#111827;
-  --muted:#94a3b8;
-  --text:#e5e7eb;
-  --accent:#22c55e;
-  --warn:#f59e0b;
-  --danger:#ef4444;
-  --primary:#38bdf8;
-  --chip:#1f2937;
-  --border:#1f2937;
-}
-:root.light {
-  --bg:#f9fafb;
-  --card:#ffffff;
-  --muted:#6b7280;
-  --text:#111827;
-  --accent:#16a34a;
-  --warn:#d97706;
-  --danger:#dc2626;
-  --primary:#0284c7;
-  --chip:#f3f4f6;
-  --border:#d1d5db;
-}
-
+      --bg:#0f172a;
+      --card:#111827;
+      --muted:#94a3b8;
+      --text:#e5e7eb;
+      --accent:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --primary:#38bdf8;
+      --chip:#1f2937;
+      --border:#1f2937;
+      --dark:#0f172a;
+    }
+    :root.light {
+      --bg:#f9fafb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --text:#111827;
+      --accent:#16a34a;
+      --warn:#d97706;
+      --danger:#dc2626;
+      --primary:#0284c7;
+      --chip:#f3f4f6;
+      --border:#d1d5db;
+      --dark:#ffffff;
+    }
+    
 /* ===== Header ===== */
 header {
-  background: var(--card);
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  background: var(--dark);
+  padding: 1rem 0;
+  color: white;
 }
-.logo { font-size: 20px; margin: 0; font-weight:700; color:var(--primary); }
-.desktop-nav { display: flex; gap: 20px; }
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 .desktop-nav a {
-  text-decoration: none; color: var(--text);
-  font-weight: 500; font-size:14px;
-  transition: color .2s;
+  color: white;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s;
 }
-.desktop-nav a:hover { color: var(--primary); }
 
-.side-menu {
-  position: fixed; top: 0; right: -260px;
-  width: 250px; height: 100vh;
-  background: var(--card); color:var(--text);
-  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
-  display: flex; flex-direction: column; padding: 20px;
-  transition: right 0.3s ease; z-index: 999;
+.desktop-nav a:hover {
+  color: var(--primary);
 }
-.side-menu.open { right: 0; }
-.side-menu nav { display: flex; flex-direction: column; gap: 15px; }
-.side-menu a {
-  color: var(--text); text-decoration: none; font-size: 16px; font-weight: 500;
-}
-.side-menu a:hover{ color:var(--primary); }
 
-.menu-btn, .close-btn {
-  font-size: 24px; background: none; border: none; cursor: pointer; color:var(--text);
+.desktop-nav .btn {
+  background: var(--primary);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  color: white;
 }
-.close-btn { align-self: flex-end; margin-bottom: 20px; }
 
-@media(min-width: 768px) { .menu-btn, .side-menu { display: none; } }
-@media(max-width:768px){ .desktop-nav{display:none} .menu-btn{display:block} .actions{display:none} }
+/* Mobile menu button */
+.mobile-menu-btn {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: white;
+}
+
+/* Mobile nav menu */
+.mobile-nav {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 70%;
+  height: 100%;
+  background: var(--dark);
+  flex-direction: column;
+  padding-top: 3rem;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.mobile-nav a {
+  color: white;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.mobile-nav a.btn {
+  background: var(--primary);
+  text-align: center;
+  margin: 1rem 2rem;
+  border-radius: 5px;
+}
+
+/* Close button */
+.mobile-nav a.close-menu {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+/* Show mobile button on small screens */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+  .mobile-menu-btn {
+    display: block;
+  }
+}
+
+/* When menu is open */
+.mobile-nav.open {
+  left: 0;
+  display: flex;
+  flex-direction: column;
+}
 
 /* ===== General ===== */
 .theme-toggle{
@@ -225,35 +284,34 @@ tbody tr:hover td{background:var(--chip)}
 </head>
 <body>
   <!-- ===== Header ===== -->
-  <header>
+ <header>
   <div class="container nav">
-    <h1 class="logo"></h1>
+    <h1 class="logo">KemetX</h1>
 
     <!-- Desktop links -->
     <nav class="desktop-nav">
       <a href="#">Home</a>
-      <a href="#">About Us</a>
-      <a href="#">Contact</a>
-      <a href="#">My Profile</a>
+      <a href="#about">About</a>
+      <a href="login.html">Login</a>
+      <a href="signup.html" class="btn">Sign Up</a>
+      <button class="theme-toggle" id="themeToggle">Theme</button>
     </nav>
 
-    <!-- Menu button (mobile) -->
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
-
-    <!-- Side menu -->
-    <aside class="side-menu" id="sideMenu" aria-hidden="true">
-      <button class="close-btn" id="closeMenu" aria-label="Close menu">×</button>
-      <nav>
-        <a href="#">Home</a>
-        <a href="#">About Us</a>
-        <a href="#">Contact</a>
-        <a href="#">My Profile</a>
-      </nav>
-      
-      <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
-    </aside>
+    <!-- Mobile menu button -->
+    <div class="mobile-menu-btn" onclick="toggleMenu()">☰</div>
   </div>
-  </header>
+
+  <!-- Mobile dropdown menu -->
+  <nav id="mobileMenu" class="mobile-nav">
+    <a href="#" class="close-menu" onclick="toggleMenu()">✖ Close</a>
+    <a href="#">Home</a>
+    <a href="#about">About</a>
+    <a href="login.html">Login</a>
+    <a href="signup.html" class="btn">Sign Up</a>
+    <button class="theme-toggle" id="themeToggle">Theme</button>
+  </nav>
+</header>
+      
 
   <main class="container cards-container" style="margin-top:14px">
     <!-- Form Card -->
@@ -555,11 +613,10 @@ document.getElementById('wipeBtn').addEventListener('click', ()=>{
     themeToggle.addEventListener('click',()=>{ document.documentElement.classList.toggle('light'); });
 
     // Side menu
-    const menuBtn=document.getElementById('menuBtn'),closeMenu=document.getElementById('closeMenu'),sideMenu=document.getElementById('sideMenu');
-    menuBtn.addEventListener('click',()=>sideMenu.classList.add('open'));
-    closeMenu.addEventListener('click',()=>sideMenu.classList.remove('open'));
-
-    init();
+    function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('open');
+  }
   </script>
 </body>
 </html>
