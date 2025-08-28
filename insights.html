@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Investment Decision Dashboard – KemetX</title>
+  <style>
+/* ====== RESET ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9fafb;
+  color: #111827;
+  line-height: 1.6;
+}
+
+/* ====== HEADER ====== */
+
+    header {
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* ظل أعمق */
+  padding: 1rem 2rem;
+  margin: 20px auto; /* يبعد الهيدر عن حواف الصفحة */
+  width: 95%;
+  max-width: 1200px;
+  border-radius: 10px; /* حواف دائرية */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  direction: ltr; /* تُغيّرها للعربي إذا أردت */
+  z-index: 10;
+position: relative; /* لو عايز تضمن أن الهيدر فوق المحتوى */
+  /* لو عايز تأثير زجاجي */
+background: rgba(255, 255, 255, 0.9); /* لو الخلفية شفافة */
+  
+}
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #000000;
+    }
+    
+    nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+     .menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.side-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 70%;
+  max-width: 300px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9); /* لو الخلفية شفافة */
+  backdrop-filter: blur(12px); /* لو عايز تأثير زجاجي */
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  padding: 2rem 1rem;
+  z-index: 999;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.side-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.side-menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.side-menu .close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  align-self: flex-end;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.side-menu.open {
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  header > nav {
+    display: none; /* إخفاء القائمة الأصلية فقط على الشاشات الصغيرة */
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+
+  nav:not(.side-menu nav) {
+    display: none; /* إخفاء القائمة العادية على الموبايل */
+  }
+}
+
+:root{
+  --inv-bg: linear-gradient(135deg, #111827 0%, #0b1220 100%);
+  --inv-card: rgba(255,255,255,0.06);
+  --inv-border: rgba(255,255,255,0.12);
+  --inv-text: #e5e7eb;
+  --inv-muted: #9ca3af;
+  --inv-accent: #22d3ee;
+  --inv-danger: #ef4444;
+  --inv-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  --inv-radius: 18px;
+}
+
+.inv-hero{
+  background: var(--inv-bg);
+  padding: 48px 16px;
+}
+.inv-hero__content{
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--inv-card);
+  border: 1px solid var(--inv-border);
+  box-shadow: var(--inv-shadow);
+  border-radius: var(--inv-radius);
+  padding: 28px;
+  backdrop-filter: blur(10px);
+}
+.inv-title{
+  color: var(--inv-text);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 800;
+  letter-spacing: .3px;
+}
+.inv-subtitle{
+  color: var(--inv-muted);
+  margin-top: 6px;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+.inv-form{
+  display: block;
+}
+.inv-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 14px;
+}
+@media (max-width: 1024px){
+  .inv-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 560px){
+  .inv-grid{ grid-template-columns: 1fr; }
+}
+
+.inv-field{
+  display: flex;
+  flex-direction: column;
+}
+.inv-field--full{ grid-column: 1 / -1; }
+.inv-field label{
+  color: var(--inv-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.inv-field input{
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--inv-border);
+  color: var(--inv-text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border .2s, box-shadow .2s;
+}
+.inv-field input:focus{
+  border-color: var(--inv-accent);
+  box-shadow: 0 0 0 3px rgba(34,211,238,.15);
+}
+
+.inv-actions{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.inv-btn{
+  appearance: none;
+  border: 1px solid var(--inv-border);
+  background: linear-gradient(180deg, rgba(34,211,238,.16), rgba(34,211,238,.06));
+  color: var(--inv-text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform .05s ease, filter .15s ease;
+}
+.inv-btn:hover{ filter: brightness(1.05); }
+.inv-btn:active{ transform: translateY(1px); }
+
+.inv-btn--ghost{
+  background: rgba(255,255,255,0.04);
+}
+.inv-btn--danger{
+  background: rgba(239,68,68,0.14);
+  border-color: rgba(239,68,68,0.35);
+}
+
+.inv-hint{
+  color: var(--inv-muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+/* Table Card */
+.inv-table-wrap{
+  background: linear-gradient(180deg, #0b1220, #0b1220);
+  padding: 18px 16px 48px;
+}
+.inv-table-card{
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--inv-card);
+  border: 1px solid var(--inv-border);
+  box-shadow: var(--inv-shadow);
+  border-radius: var(--inv-radius);
+  padding: 16px;
+  overflow: hidden;
+}
+.inv-table-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 4px 12px;
+  border-bottom: 1px dashed var(--inv-border);
+  margin-bottom: 8px;
+}
+.inv-table-title{
+  color: var(--inv-text);
+  font-size: 18px;
+  font-weight: 700;
+}
+.inv-table-meta{
+  color: var(--inv-muted);
+  font-size: 12px;
+}
+
+/* Table */
+.inv-table-scroll{
+  overflow: auto;
+}
+.inv-table{
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+}
+.inv-table th, .inv-table td{
+  padding: 12px 10px;
+  text-align: start;
+  border-bottom: 1px solid var(--inv-border);
+  color: var(--inv-text);
+  font-size: 14px;
+}
+.inv-table thead th{
+  color: var(--inv-muted);
+  font-weight: 600;
+  background: rgba(255,255,255,0.03);
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(6px);
+}
+.inv-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--inv-border);
+  background: rgba(255,255,255,0.05);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.inv-chip.low{  background: rgba(16,185,129,.14); border-color: rgba(16,185,129,.4); }
+.inv-chip.mid{  background: rgba(234,179,8,.14);  border-color: rgba(234,179,8,.4); }
+.inv-chip.high{ background: rgba(239,68,68,.14);  border-color: rgba(239,68,68,.4); }
+
+.inv-row-actions{
+  display: flex;
+  gap: 8px;
+}
+.inv-icon-btn{
+  appearance: none;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--inv-border);
+  color: var(--inv-text);
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.inv-icon-btn:hover{ filter: brightness(1.08); }
+
+/* Utility to match your site look if needed */
+.inv-mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+/* ===== Footer ===== */
+.footer{
+  color:var(--muted);font-size:12px;margin-top:20px;
+  text-align:center;padding:16px;
+  border-top:1px solid var(--border);
+}
+</style>
+
+</head>
+<body>
+  
+      <header>
+  <div class="logo">KemetX</div>
+  <button class="menu-toggle">☰</button>
+
+  <!-- القائمة الأفقية (للكمبيوتر) -->
+  <nav class="desktop-nav main-nav">
+    <a href="#">Home</a>
+    <a href="#about">About</a>
+    <a href="login.html">Login</a>
+    <a href="signup.html" class="btn">Sign Up</a>
+  </nav>
+
+  <!-- القائمة الجانبية (للموبايل) -->
+  <div id="sideMenu" class="side-menu">
+    <button class="close-btn">✖</button>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#about">About</a>
+      <a href="login.html">Login</a>
+      <a href="signup.html" class="btn">Sign Up</a>
+    </nav>
+  </div>
+</header>
+
+<section class="inv-hero">
+  <div class="inv-hero__content">
+    <h1 class="inv-title">Investment Decision Helper</h1>
+    <p class="inv-subtitle">Enter stock / fund data to estimate risk and get a suggested decision.</p>
+
+    <form id="inv-form" class="inv-form" autocomplete="off">
+      <div class="inv-grid">
+        <div class="inv-field">
+          <label for="assetName">Stock / Fund Name</label>
+          <input id="assetName" name="assetName" type="text" placeholder="e.g. AAPL or XYZ Fund" required />
+        </div>
+
+        <div class="inv-field">
+          <label for="currentPrice">Current Price</label>
+          <input id="currentPrice" name="currentPrice" type="number" step="0.0001" min="0" required />
+        </div>
+
+        <!-- 6 months -->
+        <div class="inv-field">
+          <label for="high6m">6M High</label>
+          <input id="high6m" name="high6m" type="number" step="0.0001" min="0" required />
+        </div>
+        <div class="inv-field">
+          <label for="low6m">6M Low</label>
+          <input id="low6m" name="low6m" type="number" step="0.0001" min="0" required />
+        </div>
+
+        <!-- 1 year -->
+        <div class="inv-field">
+          <label for="high1y">1Y High</label>
+          <input id="high1y" name="high1y" type="number" step="0.0001" min="0" required />
+        </div>
+        <div class="inv-field">
+          <label for="low1y">1Y Low</label>
+          <input id="low1y" name="low1y" type="number" step="0.0001" min="0" required />
+        </div>
+
+        <!-- 5 years -->
+        <div class="inv-field">
+          <label for="high5y">5Y High</label>
+          <input id="high5y" name="high5y" type="number" step="0.0001" min="0" required />
+        </div>
+        <div class="inv-field">
+          <label for="low5y">5Y Low</label>
+          <input id="low5y" name="low5y" type="number" step="0.0001" min="0" required />
+        </div>
+
+        <div class="inv-field inv-field--full">
+          <label for="note">Optional Note</label>
+          <input id="note" name="note" type="text" placeholder="Any note you want to add (optional)" />
+        </div>
+      </div>
+
+      <div class="inv-actions">
+        <button type="submit" class="inv-btn">Analyze & Add</button>
+        <button type="button" id="exportCsvBtn" class="inv-btn inv-btn--ghost">Export CSV</button>
+        <button type="button" id="clearAllBtn" class="inv-btn inv-btn--danger">Clear All</button>
+      </div>
+
+      <p class="inv-hint">
+        * This decision is generated by simplified rules — not financial advice. Improve rules later as you wish.
+      </p>
+    </form>
+  </div>
+</section>
+
+<section class="inv-table-wrap">
+  <div class="inv-table-card">
+    <div class="inv-table-head">
+      <h2 class="inv-table-title">Analysis Results</h2>
+      <div class="inv-table-meta" id="inv-stats"></div>
+    </div>
+
+    <div class="inv-table-scroll">
+      <table class="inv-table" id="inv-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Current Price</th>
+            <th>Risk</th>
+            <th>Decision</th>
+            <th>Dynamic Note</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="inv-tbody">
+          <!-- dynamic rows -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+  <footer class="footer">
+    © 2025 KemetX. All rights reserved
+  </footer>
+
+  <script>
+
+(function(){
+  const NAMESPACE = 'kemetx';
+  const DEFAULT_USER_ID = 'local'; // later replace with real userId when login is implemented
+  const STORAGE_KEY = (userId=DEFAULT_USER_ID) => `${NAMESPACE}:users:${userId}:invest_records`;
+
+  const $ = (sel, ctx=document) => ctx.querySelector(sel);
+  const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+  const form = $('#inv-form');
+  const tbody = $('#inv-tbody');
+  const exportBtn = $('#exportCsvBtn');
+  const clearAllBtn = $('#clearAllBtn');
+  const statsEl = $('#inv-stats');
+
+  // ========= Core Logic =========
+  function toNum(v){ const n = Number(v); return Number.isFinite(n) ? n : 0; }
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+  // Percentile of current price inside yearly range
+  function oneYearPercentile(current, low1y, high1y){
+    if (high1y <= low1y) return 0.5;
+    return clamp01((current - low1y) / (high1y - low1y));
+  }
+
+  // Simple volatility estimate = (range / current price) weighted (6m/1y/5y)
+  function weightedRangeVol(current, h6, l6, h1, l1, h5, l5){
+    const r6 = Math.max(0, (h6 - l6) / Math.max(1e-9, current));
+    const r1 = Math.max(0, (h1 - l1) / Math.max(1e-9, current));
+    const r5 = Math.max(0, (h5 - l5) / Math.max(1e-9, current));
+    // Weights: 1y 0.5, 6m 0.3, 5y 0.2
+    return 0.5*r1 + 0.3*r6 + 0.2*r5;
+  }
+
+  // Risk classification from volatility
+  function riskFromRangeVol(rangeVol){
+    // thresholds: <0.2 = Low, 0.2–0.4 = Medium, >0.4 = High
+    if (rangeVol < 0.2) return {level:'Low', class:'low'};
+    if (rangeVol < 0.4) return {level:'Medium', class:'mid'};
+    return {level:'High', class:'high'};
+  }
+
+  // Heuristic decision based on price position and risk
+  function decisionHeuristic(current, low1y, high1y, riskLevel){
+    const pct = oneYearPercentile(current, low1y, high1y); // 0 = near bottom, 1 = near top
+    if (current > high1y && (riskLevel==='Low' || riskLevel==='Medium')){
+      return {decision: 'Bullish breakout — partial buy', note: 'Price broke yearly high. Enter gradually & monitor volume.'};
+    }
+    if (pct <= 0.25 && (riskLevel==='Low' || riskLevel==='Medium')){
+      return {decision: 'Potential value buy', note: 'Price near yearly lows. Watch trend & volume.'};
+    }
+    if (pct >= 0.85 && riskLevel==='High'){
+      return {decision: 'Wait / lighten position', note: 'Near yearly highs with high risk — correction possible.'};
+    }
+    if (pct >= 0.7 && (riskLevel==='Low' || riskLevel==='Medium')){
+      return {decision: 'Gradual cautious buy', note: 'Close to highs but risk is manageable.'};
+    }
+    return {decision: 'Wait for clearer signal', note: 'Mid-range. Wait for breakout or rebound.'};
+  }
+
+  function positionSizing(riskLevel){
+    if (riskLevel==='Low') return 'Up to 5% of portfolio';
+    if (riskLevel==='Medium') return 'Up to 2.5% of portfolio';
+    return 'Up to 1% of portfolio';
+  }
+
+  function stopLossHint(riskLevel){
+    if (riskLevel==='Low') return 'Stop loss 8–12% below entry';
+    if (riskLevel==='Medium') return 'Stop loss 6–9% below entry';
+    return 'Stop loss 4–7% below entry';
+  }
+
+  // ========= Storage =========
+  function loadAll(userId=DEFAULT_USER_ID){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY(userId));
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveAll(list, userId=DEFAULT_USER_ID){
+    localStorage.setItem(STORAGE_KEY(userId), JSON.stringify(list));
+  }
+
+  // ========= Rendering =========
+  function renderTable(){
+    const rows = loadAll();
+    tbody.innerHTML = '';
+    rows.forEach((r, idx) => {
+      const tr = document.createElement('tr');
+
+      const riskClass = r.riskClass || 'mid';
+      tr.innerHTML = `
+        <td class="inv-mono">${idx+1}</td>
+        <td>${escapeHtml(r.assetName)}</td>
+        <td class="inv-mono">${formatPrice(r.currentPrice)}</td>
+        <td><span class="inv-chip ${riskClass}">${r.riskLevel}</span></td>
+        <td>${escapeHtml(r.decision)}</td>
+        <td>${escapeHtml(r.dynamicNote || '')}</td>
+        <td>
+          <div class="inv-row-actions">
+            <button class="inv-icon-btn" data-action="delete" data-index="${idx}">Delete</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Simple stats
+    const total = rows.length;
+    const high = rows.filter(r => r.riskLevel==='High').length;
+    const mid  = rows.filter(r => r.riskLevel==='Medium').length;
+    const low  = rows.filter(r => r.riskLevel==='Low').length;
+    statsEl.textContent = total
+      ? `Total: ${total} | Low: ${low} • Medium: ${mid} • High: ${high}`
+      : 'No results yet.';
+  }
+
+  function escapeHtml(s){
+    return String(s ?? '')
+      .replaceAll('&','&amp;').replaceAll('<','&lt;')
+      .replaceAll('>','&gt;').replaceAll('"','&quot;')
+      .replaceAll("'",'&#39;');
+  }
+  function formatPrice(n){
+    const v = Number(n);
+    if (!Number.isFinite(v)) return '-';
+    return v >= 1000 ? v.toLocaleString(undefined,{maximumFractionDigits:2})
+                     : v.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:4});
+  }
+
+  // ========= Events =========
+  form?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+
+    const assetName = $('#assetName').value.trim();
+    const current   = toNum($('#currentPrice').value);
+
+    const h6  = toNum($('#high6m').value);
+    const l6  = toNum($('#low6m').value);
+    const h1  = toNum($('#high1y').value);
+    const l1  = toNum($('#low1y').value);
+    const h5  = toNum($('#high5y').value);
+    const l5  = toNum($('#low5y').value);
+    const note= $('#note').value.trim();
+
+    if (!assetName || current<=0){
+      alert('Please enter a valid name and current price.');
+      return;
+    }
+    if (!(l6<=h6 && l1<=h1 && l5<=h5)){
+      alert('Check high/low values — low must be less than high.');
+      return;
+    }
+
+    const rangeVol = weightedRangeVol(current, h6, l6, h1, l1, h5, l5);
+    const riskObj  = riskFromRangeVol(rangeVol);
+    const decObj   = decisionHeuristic(current, l1, h1, riskObj.level);
+    const sizing   = positionSizing(riskObj.level);
+    const slHint   = stopLossHint(riskObj.level);
+
+    const dynamicNote = [
+      decObj.note,
+      `1Y Position: ${(oneYearPercentile(current, l1, h1)*100).toFixed(0)}%`,
+      `Suggested Position Size: ${sizing}`,
+      `Suggested Stop Loss: ${slHint}`,
+      note ? `Note: ${note}` : ''
+    ].filter(Boolean).join(' | ');
+
+    const rec = {
+      assetName,
+      currentPrice: current,
+      riskLevel: riskObj.level,
+      riskClass: riskObj.class,
+      decision: decObj.decision,
+      dynamicNote,
+      createdAt: Date.now()
+    };
+
+    const rows = loadAll();
+    rows.unshift(rec);
+    saveAll(rows);
+    renderTable();
+    form.reset();
+  });
+
+  tbody?.addEventListener('click', (e)=>{
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const idx = Number(btn.dataset.index);
+    if (action === 'delete' && Number.isInteger(idx)){
+      const rows = loadAll();
+      rows.splice(idx,1);
+      saveAll(rows);
+      renderTable();
+    }
+  });
+
+  exportBtn?.addEventListener('click', ()=>{
+    const rows = loadAll();
+    if (!rows.length){
+      alert('No data to export.');
+      return;
+    }
+    const headers = ['name','current_price','risk','decision','note'];
+    const csvRows = [headers.join(',')];
+    rows.forEach(r=>{
+      const line = [
+        csvSafe(r.assetName),
+        csvSafe(r.currentPrice),
+        csvSafe(r.riskLevel),
+        csvSafe(r.decision),
+        csvSafe(r.dynamicNote)
+      ].join(',');
+      csvRows.push(line);
+    });
+    const blob = new Blob([csvRows.join('\n')], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+    a.href = url;
+    a.download = `kemetx-investments-${stamp}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  clearAllBtn?.addEventListener('click', ()=>{
+    if (confirm('Clear all records?')){
+      saveAll([]);
+      renderTable();
+    }
+  });
+
+  function csvSafe(val){
+    const s = String(val ?? '');
+    if (/[",\n]/.test(s)){
+      return `"${s.replaceAll('"','""')}"`;
+    }
+    return s;
+  }
+
+  // init
+  renderTable();
+
+    // Side menu
+ function openMenu() {
+  document.getElementById("sideMenu")?.classList.add("open");
+}
+function closeMenu() {
+  document.getElementById("sideMenu")?.classList.remove("open");
+}
+
+// Attach event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const closeBtn = document.querySelector('.close-btn');
+  
+  if (menuToggle) {
+    menuToggle.addEventListener('click', openMenu);
+  }
+  
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMenu);
+  }
+});
+})();
+
+  </script>
+</body>
+</html>
