@@ -341,37 +341,36 @@ background: rgba(255, 255, 255, 0.9); /* لو الخلفية شفافة */
 </head>
 <body>
   
-      <header>
+     <header>
   <div class="logo">KemetX</div>
   <button class="menu-toggle">☰</button>
 
   <!-- القائمة الأفقية (للكمبيوتر) -->
   <nav class="desktop-nav main-nav">
-    <a href="#">Home</a>
-    <a href="#about">About</a>
-    <a href="login.html" id="loginLink">Login</a>
-  <a href="register.html" class="btn" id="signupLink">Sign Up</a>
-
-  <a href="insights.html" id="insightsLink" style="display:none;">insights</a>
-  <a href="profile.html" id="profileLink" style="display:none;">Profile</a>
-  
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+   <a href="login.html" class="login-link">Login</a>
+<a href="signup.html" class="signup-link">Sign Up</a>
+<a href="insights.html" class="insights-link hidden">Insights</a>
+<a href="profile.html" class="profile-link hidden">Profile</a>
+<a href="login.html" class="logout-link hidden" style="color:red; font-weight:600;">Logout</a>
   </nav>
 
   <!-- القائمة الجانبية (للموبايل) -->
   <div id="sideMenu" class="side-menu">
     <button class="close-btn">✖</button>
     <nav>
-      <a href="#">Home</a>
-      <a href="#about">About</a>
-      <a href="login.html" id="loginLink">Login</a>
-  <a href="register.html" class="btn" id="signupLink">Sign Up</a>
-
-  <a href="insights.html" id="insightsLink" style="display:none;">insights</a>
-  <a href="profile.html" id="profileLink" style="display:none;">Profile</a>
-  
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="login.html" class="login-link">Login</a>
+<a href="signup.html" class="signup-link">Sign Up</a>
+<a href="insights.html" class="insights-link hidden">Insights</a>
+<a href="profile.html" class="profile-link hidden">Profile</a>
+<a href="login.html" class="logout-link hidden" style="color:red; font-weight:600;">Logout</a>
     </nav>
   </div>
 </header>
+
 
 <section class="inv-hero">
   <div class="inv-hero__content">
@@ -719,28 +718,39 @@ background: rgba(255, 255, 255, 0.9); /* لو الخلفية شفافة */
   // init
   renderTable();
 
-  // JavaScript
-// تحقق إذا المستخدم مسجّل الدخول
-// ممكن تستخدم localStorage أو أي طريقة للتحقق من الجلسة
-const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+ 
 
-const loginLink = document.getElementById('loginLink');
-const signupLink = document.getElementById('signupLink');
-const profileLink = document.getElementById('profileLink');
-const insightsLink = document.getElementById('insightsLink');
+// تحقق إذا المستخدم مسجّل الدخول
+const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+
+// نجيب كل العناصر (desktop + mobile)
+const loginLinks = document.querySelectorAll(".login-link");
+const signupLinks = document.querySelectorAll(".signup-link");
+const profileLinks = document.querySelectorAll(".profile-link");
+const insightsLinks = document.querySelectorAll(".insights-link");
+const logoutLinks = document.querySelectorAll(".logout-link");
 
 if (isLoggedIn) {
-  // إخفاء روابط تسجيل الدخول
-  loginLink.style.display = 'none';
-  signupLink.style.display = 'none';
-
-  // إظهار روابط الملف الشخصي وInsights
-  profileLink.style.display = 'inline-block';
-  insightsLink.style.display = 'inline-block';
+  loginLinks.forEach(el => el.style.display = "none");
+  signupLinks.forEach(el => el.style.display = "none"); // <== مهم
+  profileLinks.forEach(el => el.style.display = "inline-block");
+  insightsLinks.forEach(el => el.style.display = "inline-block");
+  logoutLinks.forEach(el => el.style.display = "inline-block");
+} else {
+  loginLinks.forEach(el => el.style.display = "inline-block");
+  signupLinks.forEach(el => el.style.display = "inline-block");
+  profileLinks.forEach(el => el.style.display = "none");
+  insightsLinks.forEach(el => el.style.display = "none");
+  logoutLinks.forEach(el => el.style.display = "none");
 }
 
-localStorage.setItem('loggedIn', 'true');
-localStorage.removeItem('loggedIn');
+
+// زر Logout
+logoutLinks.forEach(el => el.addEventListener("click", function(e){
+  e.preventDefault();
+  localStorage.removeItem("loggedIn");
+  window.location.reload(); // يعيد تحميل الصفحة لتحديث القوائم
+}));
 
     // Side menu
  function openMenu() {
