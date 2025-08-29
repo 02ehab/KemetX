@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - KemetX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+        /* ====== RESET ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9fafb;
+  color: #111827;
+  line-height: 1.6;
+}
+
+/* ====== HEADER ====== */
+
+    header {
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* ظل أعمق */
+  padding: 1rem 2rem;
+  margin: 20px auto; /* يبعد الهيدر عن حواف الصفحة */
+  width: 95%;
+  max-width: 1200px;
+  border-radius: 10px; /* حواف دائرية */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  direction: ltr; /* تُغيّرها للعربي إذا أردت */
+  z-index: 10;
+position: relative; /* لو عايز تضمن أن الهيدر فوق المحتوى */
+  /* لو عايز تأثير زجاجي */
+background: rgba(255, 255, 255, 0.9); /* لو الخلفية شفافة */
+  
+}
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #000000;
+    }
+    
+    nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+     .menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.side-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 70%;
+  max-width: 300px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9); /* لو الخلفية شفافة */
+  backdrop-filter: blur(12px); /* لو عايز تأثير زجاجي */
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  padding: 2rem 1rem;
+  z-index: 999;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.side-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.side-menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.side-menu .close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  align-self: flex-end;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.side-menu.open {
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  header > nav {
+    display: none; /* إخفاء القائمة الأصلية فقط على الشاشات الصغيرة */
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+
+  nav:not(.side-menu nav) {
+    display: none; /* إخفاء القائمة العادية على الموبايل */
+  }
+}
+    main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+    .hero {
+      background: #3b82f6;
+      color: #fff;
+      padding: 4rem 2rem;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 3rem;
+    }
+    .hero h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.1rem; }
+
+    .section {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .section h2 { color: #1e3a8a; margin-bottom: 1rem; }
+    .section p { margin-bottom: 0.8rem; }
+
+    .services-grid, .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .card {
+      background: #f3f4f6;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); }
+    .card h3 { color: #1e3a8a; margin-bottom: 0.5rem; }
+    .card p { font-size: 0.95rem; }
+
+    .cta {
+      text-align: center;
+      margin: 3rem 0;
+    }
+    .cta button {
+      background: #3b82f6; color: #fff;
+      padding: 0.8rem 1.5rem;
+      border: none; border-radius: 8px;
+      cursor: pointer; font-weight: 600;
+      transition: 0.3s;
+    }
+    .cta button:hover { background: #1e40af; }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.5rem; }
+      nav { flex-direction: column; align-items: flex-start; }
+      nav a { margin: 0.5rem 0; }
+    }
+    /* ===== Footer ===== */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #0f172a;
+      color: #fff;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .desktop-nav { display: none; }
+      .menu-toggle { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+  <div class="logo">KemetX</div>
+  <button class="menu-toggle">☰</button>
+
+  <!-- القائمة الأفقية (للكمبيوتر) -->
+  <nav class="desktop-nav main-nav">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+   <a href="login.html" class="login-link">Login</a>
+<a href="signup.html" class="signup-link">Sign Up</a>
+<a href="insights.html" class="insights-link hidden">Insights</a>
+<a href="profile.html" class="profile-link hidden">Profile</a>
+<a href="login.html" class="logout-link hidden" style="color:red; font-weight:600;">Logout</a>
+  </nav>
+
+  <!-- القائمة الجانبية (للموبايل) -->
+  <div id="sideMenu" class="side-menu">
+    <button class="close-btn">✖</button>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="login.html" class="login-link">Login</a>
+<a href="signup.html" class="signup-link">Sign Up</a>
+<a href="insights.html" class="insights-link hidden">Insights</a>
+<a href="profile.html" class="profile-link hidden">Profile</a>
+<a href="login.html" class="logout-link hidden" style="color:red; font-weight:600;">Logout</a>
+    </nav>
+  </div>
+</header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Your ultimate platform to connect, manage, and grow your investment effortlessly</h1>
+      <p>Join KemetX today and take control of your investments with ease and confidence.</p>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section">
+      <h2>Our Services</h2>
+      <div class="services-grid">
+        <div class="card">
+          <h3>Connect</h3>
+          <p>Network with investors and partners to grow your financial opportunities.</p>
+        </div>
+        <div class="card">
+          <h3>Manage</h3>
+          <p>Track and organize your investments in a simple, efficient dashboard.</p>
+        </div>
+        <div class="card">
+          <h3>Analyze</h3>
+          <p>Get insights and reports to make smarter investment decisions.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Goals Section -->
+    <section class="section">
+      <h2>Our Goals</h2>
+      <div class="goals-grid">
+        <div class="card">
+          <h3>Transparency</h3>
+          <p>Providing clear data and reports to ensure trust and confidence.</p>
+        </div>
+        <div class="card">
+          <h3>Growth</h3>
+          <p>Helping users maximize their investment potential and success.</p>
+        </div>
+        <div class="card">
+          <h3>Support</h3>
+          <p>Offering guidance and tools to simplify the investment process.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call To Action -->
+    <section class="cta">
+      <button onclick="window.location.href='signup.html'">Get Started</button>
+    </section>
+  </main>
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 KemetX. All rights reserved.
+  </footer>
+
+  <script>
+    // تحقق إذا المستخدم مسجّل الدخول
+const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+
+// نجيب كل العناصر (desktop + mobile)
+const loginLinks = document.querySelectorAll(".login-link");
+const signupLinks = document.querySelectorAll(".signup-link");
+const profileLinks = document.querySelectorAll(".profile-link");
+const insightsLinks = document.querySelectorAll(".insights-link");
+const logoutLinks = document.querySelectorAll(".logout-link");
+
+if (isLoggedIn) {
+  loginLinks.forEach(el => el.style.display = "none");
+  signupLinks.forEach(el => el.style.display = "none"); // <== مهم
+  profileLinks.forEach(el => el.style.display = "inline-block");
+  insightsLinks.forEach(el => el.style.display = "inline-block");
+  logoutLinks.forEach(el => el.style.display = "inline-block");
+} else {
+  loginLinks.forEach(el => el.style.display = "inline-block");
+  signupLinks.forEach(el => el.style.display = "inline-block");
+  profileLinks.forEach(el => el.style.display = "none");
+  insightsLinks.forEach(el => el.style.display = "none");
+  logoutLinks.forEach(el => el.style.display = "none");
+}
+
+
+// زر Logout
+logoutLinks.forEach(el => el.addEventListener("click", function(e){
+  e.preventDefault();
+  localStorage.removeItem("loggedIn");
+  window.location.reload(); // يعيد تحميل الصفحة لتحديث القوائم
+}));
+
+    // Side menu
+ function openMenu() {
+  document.getElementById("sideMenu")?.classList.add("open");
+}
+function closeMenu() {
+  document.getElementById("sideMenu")?.classList.remove("open");
+}
+
+// Attach event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const closeBtn = document.querySelector('.close-btn');
+  
+  if (menuToggle) {
+    menuToggle.addEventListener('click', openMenu);
+  }
+  
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMenu);
+  }
+});
+
+  </script>
+</body>
+</html>
